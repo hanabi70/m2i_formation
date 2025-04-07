@@ -21,8 +21,8 @@ class Evaluator:
             'precision': precision,
             'recall': recall
         }
-        print(dict_scores)
         return pd.DataFrame(dict_scores, index=[0])
+    
     def get_prediction(self):
         # Make predictions on the test set
         y_pred = self.model.predict(self.X_test)

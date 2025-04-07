@@ -8,8 +8,8 @@ class Loader:
     def save_data(self,data:pd.DataFrame, filename:str,version:str = "0"):
         save_path = f"{self.path}/data/process"
         path = f'{save_path}/v{version}_{filename}'
-        print(path)
         data.to_csv(path, index=False)
+        
     def load_data(self,filename:str,version:str = "0"):
         load_path = f"{self.path}/data/process"
         path = f'{load_path}/v{version}_{filename}'
