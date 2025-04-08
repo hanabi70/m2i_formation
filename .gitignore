@@ -9,6 +9,13 @@ wheels/
 # Virtual environments
 .venv
 uv.lock
+.env
 
 # exploration
 notebooks
+
+#mlflow
+mlruns
+mlartifacts
+
+

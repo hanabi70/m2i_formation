@@ -1,0 +1,14 @@
+name: My Project
+
+python_env: python_env.yaml
+# or
+# conda_env: my_env.yaml
+# or
+# docker_env:
+#    image:  mlflow-docker-example
+
+entry_points:
+  main:
+    parameters:
+      n_estimators: { type: int, default: 100}
+    command: "python mlflow_process.py --n_estimators {n_estimators}"

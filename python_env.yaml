@@ -1,0 +1,12 @@
+# Python version required to run the project.
+python: 3.11.11
+# Dependencies required to build packages. This field is optional.
+build_dependencies:
+  - pip
+  - setuptools
+# Dependencies required to run the project.
+dependencies:
+  - mlflow>=2.21.3
+  - pandas>=2.2.3
+  - ruff>=0.11.4
+  - scikit-learn>=1.6.1
