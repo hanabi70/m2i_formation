@@ -1,9 +1,10 @@
-from sklearn import datasets
+from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from mlflow.models import infer_signature
 from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score
 import os
+import pandas as pd
 
 import mlflow
 from utils import sklearn_to_frame
@@ -19,7 +20,7 @@ class MLFlowProcessor:
         mlflow.set_tracking_uri(self.mlflow_uri)
         self.iris_df = self.load_dataset()
         self.model_params = model_params
-        self.model = RandomForestClassifier() # type: ignore
+        self.model = RandomForestClassifier(**model_params) # type: ignore
         self.y = self.iris_df['target']
         self.X = self.iris_df.drop(columns=['target'])
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=42,stratify=self.iris_df["target"])
@@ -28,10 +29,10 @@ class MLFlowProcessor:
         
     def load_dataset(self):
         # Load the iris dataset
-        iris = datasets.load_iris(as_frame = True)
-        iris_data = iris["data"] # type: ignore
-        iris_data['target'] = iris["target"] # type: ignore
-        return iris_data
+        root_path = Path(__file__).parent.parent
+        data_path = root_path.joinpath("./data/process/v0_iris.csv")
+        iris_df = pd.read_csv(data_path)
+        return iris_df
     
     def train(self):
         # Train the model
@@ -63,7 +64,7 @@ class MLFlowProcessor:
             mlflow.log_metrics(metrics)
             # Log the model
             signature = infer_signature(self.X_train, self.model.predict(self.X_train))
-            mlflow.sklearn.log_model(self.model, "model", signature=signature)
+            mlflow.sklearn.log_model(self.model, "iris_model", signature=signature)
             mlflow.sklearn.save_model(self.model, "iris_model", signature=signature,input_example=self.X_train.iloc[0:1])
 
 
@@ -81,5 +82,7 @@ if __name__ == "__main__":
     metrics = mlflow_processor.compute_scores(y_pred=y_pred)
     print("logging metrics...")
     mlflow_processor.log_mlflow(metrics=metrics)
+    model = mlflow.sklearn.load_model("iris_model")
+    print(model)
             
     
