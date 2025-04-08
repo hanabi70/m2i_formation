@@ -2,8 +2,7 @@
 python: 3.11.11
 # Dependencies required to build packages. This field is optional.
 build_dependencies:
-  - pip
-  - setuptools
+  - uv
 # Dependencies required to run the project.
 dependencies:
   - mlflow>=2.21.3
