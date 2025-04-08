@@ -17,6 +17,7 @@ class MLFlowProcessor:
         mlflow_port = os.getenv('MLFLOW_PORT','8080')
         self.mlflow_uri = f"{mlflow_host}:{mlflow_port}"
         mlflow.set_tracking_uri(self.mlflow_uri)
+        mlflow.set_experiment("MLflow Tutorial")
         self.iris_df = self.load_dataset()
         self.model_params = model_params
         self.model = RandomForestClassifier() # type: ignore
