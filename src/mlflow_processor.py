@@ -18,6 +18,7 @@ class MLFlowProcessor:
         mlflow_port = os.getenv('MLFLOW_PORT','8080')
         self.mlflow_uri = f"{mlflow_host}:{mlflow_port}"
         mlflow.set_tracking_uri(self.mlflow_uri)
+        mlflow.sklearn.autolog()
         self.iris_df = self.load_dataset()
         self.model_params = model_params
         self.model = RandomForestClassifier(**model_params) # type: ignore
@@ -36,7 +37,8 @@ class MLFlowProcessor:
     
     def train(self):
         # Train the model
-        self.model.fit(self.X_train, self.y_train)
+        with mlflow.start_run():
+            self.model.fit(self.X_train, self.y_train)
 
     def predict(self):
         # Make predictions on the test set
@@ -56,16 +58,13 @@ class MLFlowProcessor:
         }
         return dict_scores
     
+    def save_model(self):
+        signature = infer_signature(self.X_train, self.model.predict(self.X_train))
+        mlflow.sklearn.save_model(self.model, "iris_model", signature=signature,input_example=self.X_train.iloc[0:1])
 
-    def log_mlflow(self,metrics:dict):
-        with mlflow.start_run():
-            # Log model parameters
-            mlflow.log_params(self.model_params)
-            mlflow.log_metrics(metrics)
-            # Log the model
-            signature = infer_signature(self.X_train, self.model.predict(self.X_train))
-            mlflow.sklearn.log_model(self.model, "iris_model", signature=signature)
-            mlflow.sklearn.save_model(self.model, "iris_model", signature=signature,input_example=self.X_train.iloc[0:1])
+
+    
+            
 
 
 if __name__ == "__main__":
@@ -79,9 +78,9 @@ if __name__ == "__main__":
     print("training model...")
     mlflow_processor.train()
     y_pred = mlflow_processor.predict()
-    metrics = mlflow_processor.compute_scores(y_pred=y_pred)
-    print("logging metrics...")
-    mlflow_processor.log_mlflow(metrics=metrics)
+    mlflow_processor.save_model()
+    # metrics = mlflow_processor.compute_scores(y_pred=y_pred)
+    
     model = mlflow.pyfunc.load_model("iris_model")
     print(model)
             
