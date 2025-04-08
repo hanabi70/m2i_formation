@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score
 import os
 
 import mlflow
-from src.utils import sklearn_to_frame
+from utils import sklearn_to_frame
 import argparse
 
 
