@@ -82,7 +82,7 @@ if __name__ == "__main__":
     metrics = mlflow_processor.compute_scores(y_pred=y_pred)
     print("logging metrics...")
     mlflow_processor.log_mlflow(metrics=metrics)
-    model = mlflow.sklearn.load_model("iris_model")
+    model = mlflow.pyfunc.load_model("iris_model")
     print(model)
             
     
