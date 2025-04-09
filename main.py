@@ -6,7 +6,6 @@ load_dotenv(".env")
 
 def run():
     uri = os.getenv('GIT_URI',"")
-    print(uri)
     version = os.getenv('GIT_BRANCH',"")
     experiment_name = os.getenv('EXPERIMENT_NAME',"")
     env_manager = "local"

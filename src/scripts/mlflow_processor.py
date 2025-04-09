@@ -7,7 +7,7 @@ import os
 import pandas as pd
 
 import mlflow
-from utils import sklearn_to_frame
+from .utils import sklearn_to_frame
 import argparse
 
 
@@ -27,11 +27,12 @@ class MLFlowProcessor:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=42,stratify=self.iris_df["target"])
         self.train_data = sklearn_to_frame(self.X_train,self.y_train)
         self.test_data = sklearn_to_frame(self.X_test,self.y_test)
+        self.model_name = os.getenv('MODEL_NAME','iris_model')
         
     def load_dataset(self):
         # Load the iris dataset
         root_path = Path(__file__).parent.parent
-        data_path = root_path.joinpath("./data/process/v0_iris.csv")
+        data_path = root_path.joinpath("./data/v0_iris.csv")
         iris_df = pd.read_csv(data_path)
         return iris_df
     
@@ -39,6 +40,11 @@ class MLFlowProcessor:
         # Train the model
         with mlflow.start_run():
             self.model.fit(self.X_train, self.y_train)
+
+
+    def predict_one(self,features:dict):
+        pred = self.model.predict(features) # type: ignore
+        return pred[0]
 
     def predict(self):
         # Make predictions on the test set
@@ -60,9 +66,14 @@ class MLFlowProcessor:
     
     def save_model(self):
         signature = infer_signature(self.X_train, self.model.predict(self.X_train))
-        mlflow.sklearn.save_model(self.model, "iris_model", signature=signature,input_example=self.X_train.iloc[0:1])
+        mlflow.sklearn.save_model(self.model, self.model_name, signature=signature,input_example=self.X_train.iloc[0:1])
 
 
+    def load_model(self,model_uri:str|None = None):
+        if model_uri is None:
+            model_uri = self.model_name
+        self.model = mlflow.pyfunc.load_model(model_uri)
+        return self.model
     
             
 
