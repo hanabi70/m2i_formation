@@ -16,6 +16,7 @@ class Config(BaseSettings):
     MLFLOW_EXPERIMENT_NAME:str
     MODEL_NAME:str
     MODEL_URI:str
+    MLFLOW_TRACKING_URI:str
 
 
     model_config = SettingsConfigDict(
