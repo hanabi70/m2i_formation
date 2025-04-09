@@ -2,7 +2,6 @@ from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from mlflow.models import infer_signature
-import os
 import pandas as pd
 
 from ..core.config import config
