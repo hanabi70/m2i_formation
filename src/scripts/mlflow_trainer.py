@@ -3,8 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from mlflow.models import infer_signature
 import pandas as pd
-
-from ..core.config import config
+import os
 import mlflow
 from .utils import sklearn_to_frame
 import argparse
@@ -13,8 +12,8 @@ import argparse
 
 class MLFlowProcessor:
     def __init__(self,model_params:dict) -> None:
-        mlflow_host = config.MLFLOW_HOST
-        mlflow_port = config.MLFLOW_PORT
+        mlflow_host = os.getenv("MLFLOW_HOST")
+        mlflow_port = os.getenv("MLFLOW_PORT")
         self.mlflow_uri = f"{mlflow_host}:{mlflow_port}"
         mlflow.set_tracking_uri(self.mlflow_uri)
         mlflow.sklearn.autolog()
@@ -26,7 +25,7 @@ class MLFlowProcessor:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=42,stratify=self.iris_df["target"])
         self.train_data = sklearn_to_frame(self.X_train,self.y_train)
         self.test_data = sklearn_to_frame(self.X_test,self.y_test)
-        self.model_name = config.MODEL_NAME
+        self.model_name = os.getenv("MODEL_NAME")
         
     def load_dataset(self):
         # Load the iris dataset
