@@ -3,11 +3,12 @@ from .routes import ApiRoutes
 import uvicorn
 from starlette.middleware.sessions import SessionMiddleware
 from ..scripts import MLFlowProcessor
+from ..core.config import config
 
 class AppManager:
     def __init__(self,
                  mlflow_processor: MLFlowProcessor) -> None:
-        self.app = FastAPI()
+        self.app = FastAPI(title=config.API_TITLE)
         self.router = APIRouter()
         self.mlflow_processor = mlflow_processor
         self.api_routes = ApiRoutes(self.router,mlflow_processor)
