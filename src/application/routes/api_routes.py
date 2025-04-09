@@ -12,7 +12,6 @@ class ApiRoutes:
         self.router.post("/predict", response_class=JSONResponse)(self.predict)
     
     def predict(self,prediction_input:PredictionInput):
-        print(f"model_uri: {prediction_input.model_uri}")
         prediction_args = {
             'sepal length (cm)': prediction_input.sepal_length,
             'sepal width (cm)': prediction_input.sepal_width,
@@ -21,5 +20,4 @@ class ApiRoutes:
         }
         self.mlflow_processor.load_model(model_uri=prediction_input.model_uri)
         prediction = self.mlflow_processor.predict_one(features = prediction_args)
-        print(prediction)
         return JSONResponse(content={"prediction": int(prediction)})

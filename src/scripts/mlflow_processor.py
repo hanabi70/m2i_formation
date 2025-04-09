@@ -11,7 +11,7 @@ class MLFlowProcessor:
 
     def predict_one(self,features:dict):
         if self.model is None:
-            raise ValueError("Model not loaded. Please load the model first.")
+            self.model = self.load_model()
         pred = self.model.predict(features)
         return pred[0]
 
