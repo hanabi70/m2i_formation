@@ -1,8 +1,7 @@
-from fastapi import APIRouter,Form
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from ...scripts import MLFlowProcessor
 from ._models import PredictionInput
-from pydantic import Field
 
 class ApiRoutes:
     def __init__(self,
