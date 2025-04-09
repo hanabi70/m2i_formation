@@ -5,7 +5,6 @@ from mlflow.models import infer_signature
 import pandas as pd
 import os
 import mlflow
-from .utils import sklearn_to_frame
 import argparse
 
 
@@ -23,8 +22,8 @@ class MLFlowProcessor:
         self.y = self.iris_df['target']
         self.X = self.iris_df.drop(columns=['target'])
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=42,stratify=self.iris_df["target"])
-        self.train_data = sklearn_to_frame(self.X_train,self.y_train)
-        self.test_data = sklearn_to_frame(self.X_test,self.y_test)
+        self.train_data = self.sklearn_to_frame(self.X_train,self.y_train)
+        self.test_data = self.sklearn_to_frame(self.X_test,self.y_test)
         self.model_name = os.getenv("MODEL_NAME")
         
     def load_dataset(self):
@@ -43,6 +42,8 @@ class MLFlowProcessor:
         signature = infer_signature(self.X_train, self.model.predict(self.X_train))
         mlflow.sklearn.save_model(self.model, self.model_name, signature=signature,input_example=self.X_train.iloc[0:1])
 
+    def sklearn_to_frame(self,X,y) -> pd.DataFrame:    
+        return pd.concat([X, y], axis=1)
 
     
             
@@ -60,5 +61,7 @@ if __name__ == "__main__":
     mlflow_processor.train()
     mlflow_processor.save_model()
     # metrics = mlflow_processor.compute_scores(y_pred=y_pred)
+
+
             
     
