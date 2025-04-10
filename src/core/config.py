@@ -17,6 +17,11 @@ class Config(BaseSettings):
     MODEL_NAME:str
     MODEL_URI:str
     MLFLOW_TRACKING_URI:str
+    AZUREML_SUBSCRIPTION_ID:str
+    AZUREML_RG_NAME:str
+    AZUREML_WORKSPACE_NAME:str
+    AZUREML_MLFLOW_URI:str
+
 
 
     model_config = SettingsConfigDict(
