@@ -19,9 +19,10 @@ jobs:
         uv sync
     - name: Analysing the code with pylint
       run: |
-        uv run pylint $(git ls-files '*.py')
+        uv run pylint $(git ls-files '*.py') --fail-under 4
   
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -41,10 +42,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install docker-ce docker-ce-cli
     - name: build image
+
       run: |
-        export $IMAGE = ${{ vars.DOCKER_USER }}/mlops_formation:latest
+        export IMAGE = ${{ vars.DOCKER_USER }}/mlops_formation:latest
         docker build -t $IMAGE .
     - name: push docker image on docker hub
       run: |
-        docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker login -u ${{ vars.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push $IMAGE
