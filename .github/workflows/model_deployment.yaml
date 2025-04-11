@@ -22,7 +22,7 @@ jobs:
         uv run pylint $(git ls-files '*.py') --fail-under 4
   
   deploy:
-    environment: Global
+    environment: mlops formation
     needs: build
     runs-on: ubuntu-latest
     steps:
