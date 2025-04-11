@@ -11,10 +11,6 @@ import argparse
 
 class MLFlowTrainer:
     def __init__(self,model_params:dict) -> None:
-        mlflow_host = os.getenv("MLFLOW_HOST")
-        mlflow_port = os.getenv("MLFLOW_PORT")
-        self.mlflow_uri = f"{mlflow_host}:{mlflow_port}"
-        mlflow.set_tracking_uri(self.mlflow_uri)
         mlflow.sklearn.autolog()
         self.iris_df = self.load_dataset()
         self.model_params = model_params
@@ -56,7 +52,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     mlflow_processor = MLFlowTrainer(model_params=args.__dict__)
-    print(f"mlflow uri:{mlflow_processor.mlflow_uri}")
     print("training model...")
     mlflow_processor.train()
     mlflow_processor.save_model()
