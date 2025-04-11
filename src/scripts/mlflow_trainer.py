@@ -18,7 +18,7 @@ class MLFlowTrainer:
         mlflow.sklearn.autolog()
         self.iris_df = self.load_dataset()
         self.model_params = model_params
-        self.model = RandomForestClassifier(**model_params)
+        self.model = RandomForestClassifier(**self.model_params)
         self.y = self.iris_df['target']
         self.X = self.iris_df.drop(columns=['target'])
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=42,stratify=self.iris_df["target"])
