@@ -28,7 +28,7 @@ class MLFlowTrainer:
         
     def load_dataset(self):
         # Load the iris dataset
-        root_path = Path(__file__).parent
+        root_path = Path(__file__).parent.parent
         data_path = root_path.joinpath("./data/v0_iris.csv")
         iris_df = pd.read_csv(data_path)
         return iris_df
