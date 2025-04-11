@@ -46,7 +46,7 @@ jobs:
     
     - name: build and push docker image
       run: |
-        export IMAGE = ${{ vars.DOCKER_USER }}/mlops_formation:latest
+        export IMAGE=${{ vars.DOCKER_USER }}/mlops_formation:latest
         docker build -t $IMAGE .
     - name: push docker image on docker hub
       run: |
