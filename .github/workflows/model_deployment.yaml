@@ -22,6 +22,8 @@ jobs:
         uv run pylint $(git ls-files '*.py') --fail-under 4
   
   deploy:
+    env:
+      IMAGE: ${{ vars.DOCKER_USER }}/mlops_formation:latest
     environment: mlops formation
     needs: build
     runs-on: ubuntu-latest
@@ -46,7 +48,6 @@ jobs:
     
     - name: build and push docker image
       run: |
-        export IMAGE=${{ vars.DOCKER_USER }}/mlops_formation:latest
         docker build -t $IMAGE .
     - name: push docker image on docker hub
       run: |
